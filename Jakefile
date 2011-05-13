@@ -4,3 +4,5 @@ task('spec', [], function (){
   foounit.getSuite().addFile(__dirname + '/spec/loader_spec');
   foounit.getSuite().run();
 });
+
+task('default', ['spec'], function (){});
