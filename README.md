@@ -30,15 +30,18 @@ For example, let's say you have a project that has the following file structure:
 If you point your web browser at http://localhost:5057/spec/ then it will run the entire test suite.
 
 If you point your web browser at http://localhost:5057/spec/support_spec then it will run:
-* spec/example/support_spec.js
+
+    spec/example/support_spec.js
 
 If you point your web browser at http://localhost:5057/spec/support then it will run
-* spec/example/support_spec.js
-* spec/example/support/inflections_spec.js 
-* spec/example/support/datetime_spec.js 
+
+    spec/example/support_spec.js
+    spec/example/support/inflections_spec.js 
+    spec/example/support/datetime_spec.js 
 
 If you point your web browser at http://localhost:5057/spec/widget then it will run
-* spec/example/widget/login_form_spec.js
+
+    spec/example/widget/login_form_spec.js
 
 ### Continuous integration
 foounit-server will output all test results to it's STDOUT.  If there are any failures then foounit-server will exit with a non-zero return value.  If all tests passed then the foounit-server process will exit with a 0 return value.
