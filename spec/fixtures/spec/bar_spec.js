@@ -1,0 +1,2 @@
+foounit.require(':src/bar');
+

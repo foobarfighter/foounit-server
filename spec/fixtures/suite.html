@@ -1,9 +1,22 @@
 <html>
 <head>
   <title>Fixture Test Suite</title>
-  <script src=":src/foounit.js"></script>
-  <script src=":src/foounit-browser.js"></script>
-  <script src=":test/suite.js" data-foounit="true"></script>
+  <script src=":test/foounit.js"></script>
+  <script src=":test/foounit-browser.js"></script>
+  
+  <script type="text/javascript">
+  foounit.server.deps = {};
+
+  foounit.load = function (path){
+    // noop
+  }
+
+  foounit.require = function (path){
+    return foounit.server.deps[path];
+  }
+  </script>
+
+  <%= suite %>
 </head>
 <body>
 </body>

@@ -3,7 +3,7 @@
 , "tags"        : ["bdd", "foount", "foounit server", "foounit-server"]
 , "repository"  : {"type": "git", "url": "git://github.com/foobarfighter/foounit-server.git"}
 , "author"      : "Bob Remeika"
-, "version"     : "0.0.0"
+, "version"     : "0.0.1"
 , "bin"         : "bin/foounit-server"
 , "main"        : "lib/server" 
 , "dependencies": {
