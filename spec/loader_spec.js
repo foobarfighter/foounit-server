@@ -16,32 +16,33 @@ describe('Loader', function (){
   }
 
   before(function (){
-    loader = new Loader(pfixtures('/spec/suite.html.ejs'), /_spec.js$/, {
+    loader = new Loader(pfixtures('/spec/suite.html'), /_spec.js$/, {
       src:  pfixtures('src'),
       spec: pfixtures('spec')
     });
   });
 
+  after(function (){
+    loader.reset();
+  });
+
   describe('.load', function (){
     describe('when the path includes the spec or test mount', function (){
-      xit('outputs all suite files matching the pattern', function (){
-        var content = loader.load('/spec/');
-        
+      it('outputs all suite files matching the pattern', function (){
+        var content = loader.load('spec/');
+
         expect(content).to(haveStringsInOrder, [
+          'bar.js?foounit.scope=function',
           'bar_spec.js?foounit.scope=function',
           'foo_spec.js?foounit.scope=function',
-          'quux_spec.js?foounit.scope=function',
-          'quux/baz_spec.js?foounit.scope=function'
+          'quux/baz_spec.js?foounit.scope=function',
+          'quux_spec.js?foounit.scope=function'
         ]);
       });
     });
   });
 
   describe('.add', function (){
-    after(function (){
-      loader.reset();
-    });
-
     describe('when the dependency list contains an item that is a string', function (){
       it('converts the item to a dependency object', function (){
         loader.addDeps('__root__', ['foo/bar']);
@@ -62,10 +63,6 @@ describe('Loader', function (){
       loader.addDeps('__root__', [ pfixtures('spec/bar_spec.js') ]);
     });
 
-    after(function (){
-      loader.reset();
-    });
-
     it('recursively builds a list of dependencies by parsing files an parsing their dependencies', function (){
       loader.build('__root__');
 
@@ -74,6 +71,44 @@ describe('Loader', function (){
       expect(deps['__root__']).to(equal, [ dobj('spec/bar_spec.js') ]);
       expect(deps[pfixtures('spec/bar_spec.js')]).to(equal, [ dobj('src/bar.js') ]);
       expect(deps[pfixtures('src/bar.js')]).to(equal, []);
+    });
+  });
+
+  describe('.flatten', function (){
+    before(function (){
+      loader.addDeps('__root__', [ pfixtures('spec/bar_spec.js') ]);
+      loader.build('__root__');
+    });
+
+    it('flattens the hash of dependencies into a sorted array', function (){
+      var deps = loader.flatten();
+      expect(deps).to(equal, [
+        dobj('src/bar.js'),
+        dobj('spec/bar_spec.js')
+      ]);
+    });
+  });
+
+  describe('.output', function (){
+    before(function (){
+      loader.addDeps('__root__', [ pfixtures('spec/bar_spec.js') ]);
+      loader.build('__root__');
+    });
+
+    it('outputs script tags in the proper order', function (){
+      var scripts = loader.output();
+
+      expect(scripts).to(haveStringsInOrder, [
+        'bar.js?foounit.scope=function',
+        'bar_spec.js?foounit.scope=function'
+      ]);
+    });
+  });
+
+  describe('.templatize', function (){
+    it('replaces placeholders with content', function (){
+      var content = loader.templatize('x {{y}} z', { y: 'foo' });
+      expect(content).to(equal, 'x foo z');
     });
   });
 
